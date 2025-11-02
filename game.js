@@ -1,105 +1,95 @@
-//gamepattern
-var gamecolour=["green","red","yellow","blue"];
-var gpattern=[];
-var userpatt=[];
-var level=0;
-var start="true";
+// Global variables
+var gamecolour = ["green", "red", "yellow", "blue"];
+var gpattern = [];
+var userpatt = [];
+var level = 0;
+// Use a boolean (true/false) not a string
+var start = true;
 
-$(document).keypress(function(event){
-    if(start=="true"){
-        $("#level-title").text("level "+level);
-        nextseq();
-        start="false";
-    }
+// 1. Start the game
+$(document).keypress(function (event) {
+  // Check if the game hasn't started yet
+  if (start === true) {
+    // Start the game
+    start = false;
+    nextseq();
+  }
 });
 
-//userclick
+// 2. User Clicks
 $(".btn").click(function () {
-    // This 'if' check is important!
-    if (start === false) { 
-        var userchosencolour = $(this).attr("id");
-        sound(userchosencolour);
-        animate(userchosencolour);
-        userpatt.push(userchosencolour);
-        check(userpatt.length - 1);
-    }
+  // Only run if the game has started
+  if (start === false) {
+    var userchosencolour = $(this).attr("id");
+    userpatt.push(userchosencolour);
+
+    sound(userchosencolour);
+    animate(userchosencolour);
+
+    // Check the answer
+    check(userpatt.length - 1);
+  }
 });
 
-//check
+// 3. Check the user's answer
 function check(index) {
-    // Check if the user's last click was correct
-    if (gpattern[index] === userpatt[index]) {
-        
-        // Check if the user has finished the entire sequence
-        if (userpatt.length === gpattern.length) {
-            console.log("success");
-            setTimeout(function () {
-                nextseq();
-            }, 1000);
-        }
-
-    } else { // This block runs if the user was wrong
-        
-        console.log("wrong");
-        var audio = new Audio("./sounds/wrong.mp3");
-        audio.play();
-
-        // Flash the screen red
-        $("body").addClass("game-over");
-        setTimeout(function () {
-            $("body").removeClass("game-over");
-        }, 200);
-
-        // Update the title
-        $("#level-title").text("Game Over, Press any Key to Restart");
-
-        // --- THIS IS THE RESET LOGIC ---
-        start = true;
-        level = 0;
-        gpattern = [];
-        userpatt = []; // Also reset the user's pattern
+  // Check if the last click was correct
+  if (gpattern[index] === userpatt[index]) {
+    // Check if the user has finished the sequence
+    if (userpatt.length === gpattern.length) {
+      console.log("success");
+      setTimeout(function () {
+        nextseq();
+      }, 1000);
     }
+  } else {
+    // --- This is the Game Over logic ---
+    console.log("wrong");
+    sound("wrong"); // Play wrong sound
+
+    // Flash the screen
+    $("body").addClass("game-over");
+    setTimeout(function () {
+      $("body").removeClass("game-over");
+    }, 200);
+
+    $("#level-title").text("Game Over, Press any Key to Restart");
+
+    // Reset ALL game variables
+    level = 0;
+    gpattern = [];
+    userpatt = [];
+    start = true; // This allows the keypress to work again
+  }
 }
 
-//sequence
-function nextseq(){
-    userpatt=[];
-    level++;
-    $("#level-title").text("level "+level);
-    var rand=Math.floor(Math.random() *4);
-    var randcolour= gamecolour[rand];
-    gpattern.push(randcolour);
-    $("#"+randcolour).fadeIn(100).fadeOut(100).fadeIn(100);
+// 4. Next Sequence
+function nextseq() {
+  // Reset user pattern for the new level
+  userpatt = [];
+  level++;
+  $("#level-title").text("Level " + level);
+
+  var rand = Math.floor(Math.random() * 4);
+  var randcolour = gamecolour[rand];
+  gpattern.push(randcolour);
+
+  // Animate and play sound for the new button
+  $("#" + randcolour).fadeIn(100).fadeOut(100).fadeIn(100);
+  sound(randcolour);
 }
 
-//animation
-function animate(userchosencolour){
-    $("#"+userchosencolour).addClass("pressed");
-    setTimeout(function(){
-        $("#"+userchosencolour).removeClass("pressed");
-    },100);
+// 5. Animate button clicks
+function animate(userchosencolour) {
+  $("#" + userchosencolour).addClass("pressed");
+  setTimeout(function () {
+    $("#" + userchosencolour).removeClass("pressed");
+  }, 100);
 }
 
-//sound
-function sound(butsound){
-    switch(butsound){
-        case "green":
-            var sound1=new Audio("./sounds/green.mp3");
-            sound1.play();
-            break;
-        case "red":
-            var sound1=new Audio("./sounds/red.mp3");
-            sound1.play();
-            break;
-        case "yellow":
-            var sound1=new Audio("./sounds/yellow.mp3");
-            sound1.play();
-            break;
-        case "blue":
-            var sound1=new Audio("./sounds/blue.mp3");
-            sound1.play();
-            break;
-    }
-
+// 6. Play sounds
+function sound(butsound) {
+  // Use a simple new Audio() constructor
+  var audio = new Audio("./sounds/" + butsound + ".mp3");
+  audio.play();
 }
-
