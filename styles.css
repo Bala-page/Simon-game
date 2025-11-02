@@ -53,6 +53,6 @@ body {
 } */
 
 .pressed{
-  box-shadow: 0 0 10 solid navajowhite;
+  box-shadow: 0 0 10px solid navajowhite;
   opacity: 0.5;
 }
