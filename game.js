@@ -14,12 +14,15 @@ $(document).keypress(function(event){
 });
 
 //userclick
-$(".btn").click(function (){
-    var userchosencolour=$(this).attr("id");
-    sound(userchosencolour);
-    animate(userchosencolour);
-    userpatt.push(userchosencolour);
-    check(userpatt.length-1);
+$(".btn").click(function () {
+    // Only run this code if the game has started
+    if (start === "false") { 
+        var userchosencolour = $(this).attr("id");
+        sound(userchosencolour);
+        animate(userchosencolour);
+        userpatt.push(userchosencolour);
+        check(userpatt.length - 1);
+    }
 });
 
 //check
@@ -96,4 +99,5 @@ function sound(butsound){
             sound1.play();
             break;
     }
+
 }
