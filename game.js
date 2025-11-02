@@ -15,8 +15,8 @@ $(document).keypress(function(event){
 
 //userclick
 $(".btn").click(function () {
-    // Only run this code if the game has started
-    if (start === "false") { 
+    // This 'if' check is important!
+    if (start === false) { 
         var userchosencolour = $(this).attr("id");
         sound(userchosencolour);
         animate(userchosencolour);
@@ -26,37 +26,38 @@ $(".btn").click(function () {
 });
 
 //check
-function check(index){
-    if(gpattern[index] == userpatt[index]){
-        if(userpatt.length == gpattern.length){
-            console.log("succes");
-            setTimeout(function(){
+function check(index) {
+    // Check if the user's last click was correct
+    if (gpattern[index] === userpatt[index]) {
+        
+        // Check if the user has finished the entire sequence
+        if (userpatt.length === gpattern.length) {
+            console.log("success");
+            setTimeout(function () {
                 nextseq();
-            },1000);
+            }, 1000);
         }
-    }
-    else{
-        if(gpattern.length == 0){
-            $("#level-title").text("First Press a Key to Start");
-            var audio = new Audio("./sounds/wrong.mp3");
-            audio.play();
-            animate(userchosencolour);   
-        }
-        else{
-            gpattern=[];
-            console.log("wrong");
-            var audio = new Audio("./sounds/wrong.mp3");
-            $("body").animate({backgroundColor: "#FF0000"},100);
-            setTimeout(function(){
-                $("body").animate({
-                backgroundColor: "#011F3F"},300);
-            },100);
-            audio.play();
-            animate(userchosencolour);
-            $("#level-title").text("Game Over, Press any Key to Restart");
-            level=0;
-            start="true";
-        }
+
+    } else { // This block runs if the user was wrong
+        
+        console.log("wrong");
+        var audio = new Audio("./sounds/wrong.mp3");
+        audio.play();
+
+        // Flash the screen red
+        $("body").addClass("game-over");
+        setTimeout(function () {
+            $("body").removeClass("game-over");
+        }, 200);
+
+        // Update the title
+        $("#level-title").text("Game Over, Press any Key to Restart");
+
+        // --- THIS IS THE RESET LOGIC ---
+        start = true;
+        level = 0;
+        gpattern = [];
+        userpatt = []; // Also reset the user's pattern
     }
 }
 
@@ -101,3 +102,4 @@ function sound(butsound){
     }
 
 }
+
