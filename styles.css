@@ -6,7 +6,7 @@ body {
 #level-title {
   font-family: 'Press Start 2P', cursive;
   font-size: 3rem;
-  margin:  5%;
+  margin: 5%;
   color: #FEF2BF;
 }
 
@@ -14,7 +14,6 @@ body {
   display: block;
   width: 50%;
   margin: auto;
-
 }
 
 .btn {
@@ -26,7 +25,8 @@ body {
   border-radius: 20%;
 }
 
-.game-over {
+/* This is for the game-over flash */
+body.game-over {
   background-color: red;
   opacity: 0.8;
 }
@@ -47,12 +47,8 @@ body {
   background-color: yellow;
 }
 
-/* .pressed {
-  box-shadow: 0 0 20px white;
+/* This is for the button click animation */
+.pressed {
+  box-shadow: 0 0 20px white; /* Fixed: added px */
   background-color: grey;
-} */
-
-.pressed{
-  box-shadow: 0 0 10px solid navajowhite;
-  opacity: 0.5;
 }
